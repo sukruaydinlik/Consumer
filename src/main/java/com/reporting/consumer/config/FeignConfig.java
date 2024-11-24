@@ -1,11 +1,15 @@
 package com.reporting.consumer.config;
 
+import com.reporting.consumer.dto.AuthRequest;
+import com.reporting.consumer.dto.AuthResponse;
 import feign.Logger;
 import feign.RequestInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Optional;
 
 @Configuration
 public class FeignConfig {
@@ -29,10 +33,11 @@ public class FeignConfig {
         return template -> {
             String token = FeignJWTHolder.getToken();
             if (token == null) {
-                token = restTemplate.postForObject(authServiceUrl, new AuthRequest(email, password), String.class);
-                FeignJWTHolder.setToken(token);
+                AuthResponse response = Optional.ofNullable(restTemplate.postForObject(authServiceUrl, new AuthRequest(email, password), AuthResponse.class))
+                        .orElseThrow(() -> new RuntimeException("Authentication failed"));
+                FeignJWTHolder.setToken(response.getToken());
             }
-            template.header("Authorization", "Bearer " + token);
+            template.header("Authorization", FeignJWTHolder.getToken());
         };
     }
 

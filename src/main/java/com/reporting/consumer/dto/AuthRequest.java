@@ -1,4 +1,4 @@
-package com.reporting.consumer.config;
+package com.reporting.consumer.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

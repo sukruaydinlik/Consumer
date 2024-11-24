@@ -16,4 +16,8 @@ feign:
     password: cjaiU8CV
     url: https://sandbox-reporting.rpdpymnt.com/api/v3/
     auth:
-      url: /oauth/token
+      url: https://sandbox-reporting.rpdpymnt.com/api/v3/merchant/user/login
+logging:
+  level:
+    com.reporting.consumer.client: DEBUG
+    feign: DEBUG
